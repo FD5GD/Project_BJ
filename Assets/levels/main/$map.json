@@ -1,0 +1,102 @@
+{
+    "map": [{
+        "id": "T01",
+        "position": [-1, 0],
+        "nav": {
+            "right": "T02",
+            "down": "01"
+        }
+    }, {
+        "id": "T02",
+        "position": [1, 0],
+        "nav": {
+            "left": "T01",
+            "right": "01",
+            "down": "01"
+        },
+        "links": [{
+            "dir1": 1,
+            "dir2": 3,
+            "origin": "T01"
+        }],
+        "reqs": [{
+            "rank": 3,
+            "levels": ["T01"]
+        }]
+    }, {
+        "id": "01",
+        "position": [-5, 1],
+        "nav": {
+            "up": "T01",
+            "left": "T02",
+            "right": "02"
+        },
+        "reqs": [{
+            "rank": 3,
+            "levels": ["T02"]
+        }]
+    }, {
+        "id": "02",
+        "position": [-4, 1],
+        "nav": {
+            "up": "T01",
+            "left": "01",
+            "right": "03"
+        },
+        "reqs": [{
+            "rank": 1,
+            "levels": ["01"]
+        }]
+    }, {
+        "id": "03",
+        "position": [-3, 1],
+        "nav": {
+            "up": "T01",
+            "left": "02",
+            "right": "04"
+        },
+        "reqs": [{
+            "rank": 1,
+            "levels": ["02"]
+        }]
+    }, {
+        "id": "04",
+        "position": [-2, 1],
+        "nav": {
+            "up": "T01",
+            "left": "03",
+            "right": "05"
+        },
+        "reqs": [{
+            "rank": 1,
+            "levels": ["03"]
+        }]
+    }, {
+        "id": "05",
+        "position": [-1, 1],
+        "nav": {
+            "up": "T01",
+            "left": "04"
+        },
+        "reqs": [{
+            "rank": 1,
+            "levels": ["04"]
+        }]
+    }],
+    "progress": [{
+        "id": "T01",
+        "best_time": 5555
+    }, {
+        "id": "T02",
+        "best_time": 11111
+    }, {
+        "id": "01",
+        "best_time": 20000
+    }, {
+        "id": "02",
+        "best_time": 1000000
+    }, {
+        "id": "03",
+        "best_time": 2000
+    }]
+}
