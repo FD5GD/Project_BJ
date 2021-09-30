@@ -16,6 +16,7 @@ anim_cycle_time = {
 
 
 level_map_surf = None
+level_preview_surf = None
 
 
 def prep_level_map(level_map):
@@ -43,6 +44,19 @@ def prep_level_map(level_map):
     return surf
 
 
+def prep_level_preview(level_id):
+    level = level_loader.get_level_by_id(level_id)
+    surf = pygame.Surface((960, 960)).convert_alpha()
+    surf.fill((0, 0, 0, 0))
+    surf.blit(image_assets.LEVEL_PREVIEW, (0, 0))
+    level_name_text = level["head"]["name"] if level_loader.get_rank(level["id"]) >= 0 else "???"
+    level_name = font_assets.MAIN_BOLD_LARGE.render(level_name_text, True, (255, 255, 255))
+    surf.blit(level_name, (200, 300 - level_name.get_height() / 2))
+    global level_preview_surf
+    level_preview_surf = surf
+    return surf
+
+
 def update_anim(key, delta):
     anim_time[key] = (anim_time[key] + delta / anim_cycle_time[key]) % 1
 
@@ -58,7 +72,7 @@ def update(window, delta):
         window.blit(menu_flash, (24, 936 - menu_flash.get_height()))
         update_anim("menu_bg", delta)
         update_anim("text_flash", delta)
-    elif screen == Screen.LEVEL_SELECT:
+    elif screen == Screen.LEVEL_SELECT or screen == Screen.LEVEL_PREVIEW:
         window.blit(image_assets.MENU_BACKGROUND, (0, -960 * anim_time["menu_bg"]))
         window.blit(image_assets.MENU_BACKGROUND, (0, 960 - 960 * anim_time["menu_bg"]))
         update_anim("menu_bg", delta)
@@ -70,4 +84,6 @@ def update(window, delta):
             pos_x = 80 * (1 + select_pos[0] - bounds["left"]) - select_icon.get_width() / 2
             pos_y = 80 * (1 + select_pos[1] - bounds["top"]) - select_icon.get_height() / 2
             window.blit(select_icon, (pos_x, pos_y))
+        if screen == Screen.LEVEL_PREVIEW and level_preview_surf:
+            window.blit(level_preview_surf, (0, 0))
     pygame.display.update()

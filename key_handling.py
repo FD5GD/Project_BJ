@@ -1,3 +1,5 @@
+import sys
+
 from main import pygame
 from screen import *
 import level_loader
@@ -30,9 +32,16 @@ def key_down(event):
                 target_level = level_loader.get_level_by_id(get_current_level())["nav"]["down"]
             except KeyError:
                 pass
+        elif event.key == pygame.K_RETURN:
+            set_screen(Screen.LEVEL_PREVIEW)
+        elif event.key == pygame.K_ESCAPE:
+            sys.exit()
         if target_level:
             set_current_level(target_level)
             print(target_level)
+    elif current_screen == Screen.LEVEL_PREVIEW:
+        if event.key == pygame.K_ESCAPE:
+            set_screen(Screen.LEVEL_SELECT)
 
 
 def key_up(event):

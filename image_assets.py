@@ -13,4 +13,5 @@ LEVEL_ICON = {
     6: pygame.image.load("Assets/images/level-icon-s.png"),
     7: pygame.image.load("Assets/images/level-icon-ss.png")
 }
-LEVEL_SELECT = pygame.image.load("Assets/images/level_select_outline.png")
+LEVEL_SELECT = pygame.image.load("Assets/images/level-select-outline.png")
+LEVEL_PREVIEW = pygame.image.load("Assets/images/menu-level-preview.png")

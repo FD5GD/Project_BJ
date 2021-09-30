@@ -8,7 +8,8 @@ import draw
 class Screen(Enum):
     MAIN_MENU = 0
     LEVEL_SELECT = 1
-    GAMEPLAY = 2
+    LEVEL_PREVIEW = 2
+    GAMEPLAY = 3
 
 
 current_screen = Screen.MAIN_MENU
@@ -32,6 +33,8 @@ def set_screen(screen):
     if screen == Screen.LEVEL_SELECT:
         level_map = level_loader.load_map()
         draw.prep_level_map(level_map)
+    if screen == Screen.LEVEL_PREVIEW:
+        draw.prep_level_preview(current_level)
 
 
 def get_current_level():
@@ -45,7 +48,7 @@ def get_current_level_pos():
 def set_current_level(level_id):
     global current_level, current_level_pos
     current_level = level_id
-    current_level_pos = tuple(next(filter(lambda l: l["id"] == level_id, level_loader.get_map()["map"]))["position"])
+    current_level_pos = tuple(level_loader.get_level_by_id(level_id)["position"])
 
 
 set_current_level("T01")
