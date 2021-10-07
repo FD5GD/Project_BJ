@@ -1,3 +1,4 @@
+import level_loader
 from main import pygame
 from screen import *
 import image_assets
@@ -52,6 +53,17 @@ def prep_level_preview(level_id):
     level_name_text = level["head"]["name"] if level_loader.get_rank(level["id"]) >= 0 else "???"
     level_name = font_assets.MAIN_BOLD_LARGE.render(level_name_text, True, (255, 255, 255))
     surf.blit(level_name, (200, 300 - level_name.get_height() / 2))
+    level_rank = image_assets.MENU_RANK_ICON[level_loader.get_rank(level["id"])]
+    surf.blit(level_rank, (240 - level_rank.get_width() / 2, 360 - level_rank.get_height() / 2))
+    if "reqs" in level:
+        level_reqs = font_assets.MAIN_BOLD.render("Unlocking requirements:", True, (255, 255, 255))
+        surf.blit(level_reqs, (280, 360 - level_reqs.get_height() / 2))
+        for i, req in enumerate(level["reqs"]):
+            req_rank = image_assets.RANK_ICON_SMALL[req["rank"]]
+            surf.blit(req_rank, (280, 400 + req_rank.get_height() * (i - 1 / 2)))
+            req_text = "on " + ", ".join(list(map(lambda l: level_loader.get_level_by_id(l)["head"]["name"], req["levels"])))
+            req_text_surf = font_assets.MAIN_REGULAR.render(req_text, True, (255, 255, 255))
+            surf.blit(req_text_surf, (280 + req_rank.get_width(), 400 + req_text_surf.get_height() * (i - 1 / 2)))
     global level_preview_surf
     level_preview_surf = surf
     return surf
