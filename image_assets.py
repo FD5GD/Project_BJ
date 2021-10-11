@@ -1,3 +1,4 @@
+import font_assets
 from main import pygame
 
 

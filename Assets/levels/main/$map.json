@@ -94,9 +94,9 @@
         "best_time": 20000
     }, {
         "id": "02",
-        "best_time": 1000000
+        "best_time": 86399999
     }, {
         "id": "03",
-        "best_time": 2000
+        "best_time": 2137
     }]
 }

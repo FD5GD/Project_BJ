@@ -68,7 +68,7 @@ def get_rank(level_id, get_locked=True):  # -1 locked, 0 default (uncompleted), 
         while rank < 7 and level["head"]["ranks"][rank] >= level_prog["best_time"]:
             rank += 1
         return rank  # TODO replace with filter (or that enumerate gimmick)
-    if get_locked:
+    elif get_locked:
         for req in level["reqs"]:
             for req_level in req["levels"]:
                 if get_rank(req_level, False) < req["rank"]:
@@ -76,3 +76,9 @@ def get_rank(level_id, get_locked=True):  # -1 locked, 0 default (uncompleted), 
         return 0
     else:
         return 0
+
+
+def get_time(level_id):
+    global current_map
+    level_prog = next(filter(lambda l: l["id"] == level_id, current_map["progress"]), None)
+    return level_prog["best_time"] if level_prog else None

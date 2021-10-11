@@ -1,47 +1,54 @@
 import sys
 
 from main import pygame
-from screen import *
+import screen
 import level_loader
 
 
 def key_down(event):
-    current_screen = get_screen()
-    if current_screen == Screen.MAIN_MENU:
+    current_screen = screen.get_screen()
+    if screen.QUIT:
+        if event.key == pygame.K_ESCAPE:
+            sys.exit()
+        else:
+            screen.QUIT = False
+    elif current_screen == screen.Screen.MAIN_MENU:
         if event.key == pygame.K_RETURN:
-            set_screen(Screen.LEVEL_SELECT)
-    elif current_screen == Screen.LEVEL_SELECT:
+            screen.set_screen(screen.Screen.LEVEL_SELECT)
+    elif current_screen == screen.Screen.LEVEL_SELECT:
         target_level = None
         if event.key == pygame.K_RIGHT:
             try:
-                target_level = level_loader.get_level_by_id(get_current_level())["nav"]["right"]
+                target_level = level_loader.get_level_by_id(screen.get_current_level())["nav"]["right"]
             except KeyError:
                 pass
         elif event.key == pygame.K_LEFT:
             try:
-                target_level = level_loader.get_level_by_id(get_current_level())["nav"]["left"]
+                target_level = level_loader.get_level_by_id(screen.get_current_level())["nav"]["left"]
             except KeyError:
                 pass
         elif event.key == pygame.K_UP:
             try:
-                target_level = level_loader.get_level_by_id(get_current_level())["nav"]["up"]
+                target_level = level_loader.get_level_by_id(screen.get_current_level())["nav"]["up"]
             except KeyError:
                 pass
         elif event.key == pygame.K_DOWN:
             try:
-                target_level = level_loader.get_level_by_id(get_current_level())["nav"]["down"]
+                target_level = level_loader.get_level_by_id(screen.get_current_level())["nav"]["down"]
             except KeyError:
                 pass
         elif event.key == pygame.K_RETURN:
-            set_screen(Screen.LEVEL_PREVIEW)
+            screen.set_screen(screen.Screen.LEVEL_PREVIEW)
         elif event.key == pygame.K_ESCAPE:
-            sys.exit()
+            screen.QUIT = True
         if target_level:
-            set_current_level(target_level)
+            screen.set_current_level(target_level)
             print(target_level)
-    elif current_screen == Screen.LEVEL_PREVIEW:
+    elif current_screen == screen.Screen.LEVEL_PREVIEW:
         if event.key == pygame.K_ESCAPE:
-            set_screen(Screen.LEVEL_SELECT)
+            screen.set_screen(screen.Screen.LEVEL_SELECT)
+        elif event.key == pygame.K_RETURN:
+            screen.set_screen(screen.Screen.GAMEPLAY) # very WIP
 
 
 def key_up(event):

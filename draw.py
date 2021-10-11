@@ -1,8 +1,9 @@
 import level_loader
 from main import pygame
-from screen import *
+import screen
 import image_assets
 import font_assets
+import parser
 import math
 
 
@@ -18,6 +19,15 @@ anim_cycle_time = {
 
 level_map_surf = None
 level_preview_surf = None
+quit_surf = None
+
+
+def prep_static():
+    global quit_surf
+    quit_surf = pygame.Surface((960, 960)).convert_alpha()
+    quit_surf.fill((0, 0, 0, 170))
+    quit_text = font_assets.MAIN_BOLD_LARGE.render("Press ESC again to quit", True, (255, 255, 255, 255))
+    quit_surf.blit(quit_text, (480 - quit_text.get_width() / 2, 480 - quit_text.get_height() / 2))
 
 
 def prep_level_map(level_map):
@@ -55,6 +65,12 @@ def prep_level_preview(level_id):
     surf.blit(level_name, (200, 300 - level_name.get_height() / 2))
     level_rank = image_assets.MENU_RANK_ICON[level_loader.get_rank(level["id"])]
     surf.blit(level_rank, (240 - level_rank.get_width() / 2, 360 - level_rank.get_height() / 2))
+    level_time_text = parser.time_millis(level_loader.get_time(level_id))
+    if level_time_text:
+        level_time = font_assets.MAIN_ITALIC.render(level_time_text, True, (255, 255, 255))
+        if level_time.get_width() > 80:
+            level_time = pygame.transform.scale(level_time, (80, level_time.get_height()))
+        surf.blit(level_time, (240 - level_time.get_width() / 2, 440 - level_rank.get_height() / 2))
     if "reqs" in level:
         level_reqs = font_assets.MAIN_BOLD.render("Unlocking requirements:", True, (255, 255, 255))
         surf.blit(level_reqs, (280, 360 - level_reqs.get_height() / 2))
@@ -74,28 +90,30 @@ def update_anim(key, delta):
 
 
 def update(window, delta):
-    global anim_time
+    global anim_time, quit_surf
     window.fill("#000000")
-    screen = get_screen()
-    if screen == Screen.MAIN_MENU:
+    current_screen = screen.get_screen()
+    if current_screen == screen.Screen.MAIN_MENU:
         window.blit(image_assets.MENU_BACKGROUND, (0, -960 * anim_time["menu_bg"]))
         window.blit(image_assets.MENU_BACKGROUND, (0, 960 - 960 * anim_time["menu_bg"]))
         menu_flash = font_assets.flash_text("Press Enter to continue", (2 + math.sin(anim_time["text_flash"] * 2 * math.pi)) / 4)
         window.blit(menu_flash, (24, 936 - menu_flash.get_height()))
         update_anim("menu_bg", delta)
         update_anim("text_flash", delta)
-    elif screen == Screen.LEVEL_SELECT or screen == Screen.LEVEL_PREVIEW:
+    elif current_screen == screen.Screen.LEVEL_SELECT or current_screen == screen.Screen.LEVEL_PREVIEW:
         window.blit(image_assets.MENU_BACKGROUND, (0, -960 * anim_time["menu_bg"]))
         window.blit(image_assets.MENU_BACKGROUND, (0, 960 - 960 * anim_time["menu_bg"]))
         update_anim("menu_bg", delta)
         if level_map_surf:
             window.blit(level_map_surf, (0, 0))
             select_icon = image_assets.LEVEL_SELECT
-            select_pos = get_current_level_pos()
+            select_pos = screen.get_current_level_pos()
             bounds = level_loader.get_map_bounds()
             pos_x = 80 * (1 + select_pos[0] - bounds["left"]) - select_icon.get_width() / 2
             pos_y = 80 * (1 + select_pos[1] - bounds["top"]) - select_icon.get_height() / 2
             window.blit(select_icon, (pos_x, pos_y))
-        if screen == Screen.LEVEL_PREVIEW and level_preview_surf:
+        if current_screen == screen.Screen.LEVEL_PREVIEW and level_preview_surf:
             window.blit(level_preview_surf, (0, 0))
+    if screen.QUIT:
+        window.blit(quit_surf, (0, 0))
     pygame.display.update()

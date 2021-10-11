@@ -9,7 +9,10 @@ class Screen(Enum):
     MAIN_MENU = 0
     LEVEL_SELECT = 1
     LEVEL_PREVIEW = 2
-    GAMEPLAY = 3
+    GAMEPLAY = 16
+
+
+QUIT = False
 
 
 current_screen = Screen.MAIN_MENU
@@ -25,6 +28,10 @@ def init_screen():
 
 def get_screen():
     return current_screen
+
+
+def get_quit():
+    return QUIT
 
 
 def set_screen(screen):
